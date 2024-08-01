@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         イオンネットスーパー便利キット
 // @namespace    https://github.com/kouhei-ioroi/aeon-netsuper-extension
-// @version      2024-08-01
+// @version      2024-08-01-v2
 // @description  イオンネットスーパーの使い勝手をちょっと良くします
 // @author       Kouhei Ioroi
 // @match        https://shop.aeon.com/netsuper/*
@@ -35,22 +35,22 @@ function 売り切れ非表示(){
 
 function グラム単価算出(){
 // 100グラムあたりの単価を表示します
-    let regex = new RegExp("[0-9]{2,}g|[0-9]{1,}kg");
+    let regex = new RegExp("[0-9]{1,}(|\.[0-9]{1,})g|[0-9]{1,}(|\.[0-9]{1,})kg");
     document.querySelectorAll("li.item.product.product-item a.product-item-link").forEach((i)=>{
         i.innerText.split(" ").forEach((x)=>{
             if(regex.test(x)){
                 let net
-                if(new RegExp("[0-9]{1,}kg").test(x)){
-                    if(new RegExp("×[0-9]{1,}").test(x)){
-                        net = (x.match("[0-9]{1,}kg")[0].replace("kg","")*x.match("×[0-9]{1,}")[0].replace("×",""))*1000;
+                if(new RegExp("[0-9]{1,}(|\.[0-9]{1,})kg").test(x)){
+                    if(new RegExp("×[0-9]{1,}(|\.[0-9]{1,})").test(x)){
+                        net = (x.match("[0-9]{1,}(|\.[0-9]{1,})kg")[0].replace("kg","")*x.match("×[0-9]{1,}")[0].replace("×",""))*1000;
                     }else{
-                        net = (x.match("[0-9]{1,}kg")[0].replace("kg",""))*1000;
+                        net = (x.match("[0-9]{1,}(|\.[0-9]{1,})kg")[0].replace("kg",""))*1000;
                     }
                 }else{
-                    if(new RegExp("×[0-9]{1,}").test(x)){
-                        net = x.match("[0-9]{2,}g")[0].replace("g","")*x.match("×[0-9]{1,}")[0].replace("×","");
+                    if(new RegExp("×[0-9]{1,}(|\.[0-9]{1,})").test(x)){
+                        net = x.match("[0-9]{1,}(|\.[0-9]{1,})g")[0].replace("g","")*x.match("×[0-9]{1,}")[0].replace("×","");
                     }else{
-                        net = x.match("[0-9]{2,}g")[0].replace("g","");
+                        net = x.match("[0-9]{1,}(|\.[0-9]{1,})g")[0].replace("g","");
                     }
                 }
                 let price_container = i.closest("div.product-item-details").querySelector("div.price-container");
@@ -74,22 +74,22 @@ function グラム単価算出(){
 
 function リットル単価算出(){
 // 100mlあたりの単価を表示します
-    let regex = new RegExp("[0-9]{2,}ml|[0-9]{1,}L");
+    let regex = new RegExp("[0-9]{1,}ml|[0-9]{1,}(|\.[0-9]{1,})L");
     document.querySelectorAll("li.item.product.product-item a.product-item-link").forEach((i)=>{
         i.innerText.split(" ").forEach((x)=>{
             if(regex.test(x)){
                 let net
-                if(new RegExp("[0-9]{1,}L").test(x)){
-                    if(new RegExp("×[0-9]{1,}").test(x)){
-                        net = (x.match("[0-9]{1,}L")[0].replace("L","")*x.match("×[0-9]{1,}")[0].replace("×",""))*1000;
+                if(new RegExp("[0-9]{1,}(|\.[0-9]{1,})L").test(x)){
+                    if(new RegExp("×[0-9]{1,}(|\.[0-9]{1,})").test(x)){
+                        net = (x.match("[0-9]{1,}(|\.[0-9]{1,})L")[0].replace("L","")*x.match("×[0-9]{1,}")[0].replace("×",""))*1000;
                     }else{
-                        net = (x.match("[0-9]{1,}L")[0].replace("L",""))*1000;
+                        net = (x.match("[0-9]{1,}(|\.[0-9]{1,})L")[0].replace("L",""))*1000;
                     }
                 }else{
                     if(new RegExp("×[0-9]{1,}").test(x)){
-                        net = x.match("[0-9]{2,}ml")[0].replace("ml","")*x.match("×[0-9]{1,}")[0].replace("×","");
+                        net = x.match("[0-9]{1,}ml")[0].replace("ml","")*x.match("×[0-9]{1,}")[0].replace("×","");
                     }else{
-                        net = x.match("[0-9]{2,}ml")[0].replace("ml","");
+                        net = x.match("[0-9]{1,}ml")[0].replace("ml","");
                     }
                 }
                 let price_container = i.closest("div.product-item-details").querySelector("div.price-container");
@@ -160,4 +160,5 @@ function 単価算出(単位){
     単価算出("貫");
     単価算出("切");
     単価算出("包");
+    単価算出("食");
 })();
