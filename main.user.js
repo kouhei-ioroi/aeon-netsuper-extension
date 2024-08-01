@@ -117,19 +117,26 @@ function 単価算出(単位){
     document.querySelectorAll("li.item.product.product-item a.product-item-link").forEach((i)=>{
         i.innerText.split(" ").forEach((x)=>{
             if(regex.test(x)){
-                let net = x.match("[0-9]{1,}"+単位)[0].replace(単位,"");
-                let price_container = i.closest("div.product-item-details").querySelector("div.price-container");
-                let price = price_container.querySelector("span.floor-tax").innerText.replace(",","");
-                let priceper100gnet = Math.round((price / net));
-                let pTag;
-                pTag = price_container.querySelector("p.x-calc-unit-price");
-                if(pTag){
-                    pTag.textContent = pTag.textContent + "\n" + priceper100gnet + "円/1"+単位;
+                let net
+                if(new RegExp("×[0-9]{1,}").test(x)){
+                    net = x.match("[0-9]{1,}"+単位)[0].replace(単位,"")*x.match("×[0-9]{1,}")[0].replace("×","");
                 }else{
-                    pTag = document.createElement("p");
-                    pTag.classList.add("x-calc-unit-price");
-                    pTag.textContent = priceper100gnet + "円/1"+単位;
-                    price_container.appendChild(pTag);
+                    net = x.match("[0-9]{1,}"+単位)[0].replace(単位,"");
+                }
+                if(net>1){
+                    let price_container = i.closest("div.product-item-details").querySelector("div.price-container");
+                    let price = price_container.querySelector("span.floor-tax").innerText.replace(",","");
+                    let priceper100gnet = Math.round((price / net));
+                    let pTag;
+                    pTag = price_container.querySelector("p.x-calc-unit-price");
+                    if(pTag){
+                        pTag.textContent = pTag.textContent + "\n" + priceper100gnet + "円/1"+単位;
+                    }else{
+                        pTag = document.createElement("p");
+                        pTag.classList.add("x-calc-unit-price");
+                        pTag.textContent = priceper100gnet + "円/1"+単位;
+                        price_container.appendChild(pTag);
+                    }
                 }
             }
         })
@@ -150,4 +157,7 @@ function 単価算出(単位){
     単価算出("カップ");
     単価算出("P");
     単価算出("枚");
+    単価算出("貫");
+    単価算出("切");
+    単価算出("包");
 })();
